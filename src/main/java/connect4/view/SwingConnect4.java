@@ -51,7 +51,7 @@ public class SwingConnect4 implements BoardView {
 
     private void buildUi(int rows, int cols) {
         buttonPanel.setLayout(new GridLayout(1, cols, 10, 10));
-        buttonPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        boardPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         buttonPanel.setBackground(BACKGROUND_COLOR);
 
         for (int c = 0; c < cols; c++) {
@@ -64,7 +64,7 @@ public class SwingConnect4 implements BoardView {
 
         boardPanel.setLayout(new GridLayout(rows, cols, 6, 6));
         boardPanel.setBorder(BorderFactory.createEmptyBorder(6, 12, 12, 12));
-        boardPanel.setBackground(BACKGROUND_COLOR);
+        boardPanel.setBackground(new Color(160, 160, 160));
 
         Font font = new Font("SansSerif", Font.BOLD, 28);
 
