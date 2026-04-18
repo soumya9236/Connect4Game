@@ -30,7 +30,8 @@ public class SwingConnect4 implements BoardView {
     private final JPanel buttonPanel = new JPanel();
     private final JLabel message = new JLabel("Welcome to Connect 4.");
 
-    private final JLabel[][] cells;
+    //private final JLabel[][] cells;
+    private final DiscCell[][] cells;
     private final JButton[] columnButtons;
 
     public SwingConnect4(Connect4Game game) {
@@ -39,7 +40,8 @@ public class SwingConnect4 implements BoardView {
         int rows = game.getBoard().getRows();
         int cols = game.getBoard().getCols();
 
-        this.cells = new JLabel[rows][cols];
+        //this.cells = new JLabel[rows][cols];
+        this.cells = new DiscCell[rows][cols];
         this.columnButtons = new JButton[cols];
 
         buildUi(rows, cols);
@@ -48,8 +50,8 @@ public class SwingConnect4 implements BoardView {
     }
 
     private void buildUi(int rows, int cols) {
-        buttonPanel.setLayout(new GridLayout(1, cols, 6, 6));
-        buttonPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 6, 12));
+        buttonPanel.setLayout(new GridLayout(1, cols, 10, 10));
+        buttonPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         buttonPanel.setBackground(BACKGROUND_COLOR);
 
         for (int c = 0; c < cols; c++) {
@@ -68,12 +70,15 @@ public class SwingConnect4 implements BoardView {
 
         for (int r = 0; r < rows; r++) {
             for (int c = 0; c < cols; c++) {
-                JLabel cell = new JLabel("", SwingConstants.CENTER);
-                cell.setOpaque(true);
-                cell.setFont(font);
-                cell.setPreferredSize(new Dimension(CELL_SIZE, CELL_SIZE));
-                cell.setBorder(new LineBorder(BOARD_BORDER_COLOR, 2));
-                cell.setBackground(EMPTY_CELL_COLOR);
+//                JLabel cell = new JLabel("", SwingConstants.CENTER);
+//                cell.setOpaque(true);
+//                cell.setFont(font);
+//                cell.setPreferredSize(new Dimension(CELL_SIZE, CELL_SIZE));
+//                cell.setBorder(new LineBorder(BOARD_BORDER_COLOR, 2));
+//                cell.setBackground(EMPTY_CELL_COLOR);
+//                cells[r][c] = cell;
+//                boardPanel.add(cell);
+                DiscCell cell = new DiscCell();
                 cells[r][c] = cell;
                 boardPanel.add(cell);
             }
@@ -153,22 +158,11 @@ public class SwingConnect4 implements BoardView {
     public void display(Board board) {
         for (int r = 0; r < board.getRows(); r++) {
             for (int c = 0; c < board.getCols(); c++) {
-                JLabel cell = cells[r][c];
-                char value = board.getCell(r, c);
-
-                cell.setText("");
-                cell.setForeground(Color.BLACK);
-
-                if (value == 'R') {
-                    cell.setBackground(Color.RED);
-                } else if (value == 'B') {
-                    cell.setBackground(Color.BLUE);
-                } else {
-                    cell.setBackground(EMPTY_CELL_COLOR);
-                }
+                cells[r][c].setValue(board.getCell(r, c));
             }
         }
-        frame.repaint();
+
+        boardPanel.repaint();
     }
 
     private void updateMessage() {
