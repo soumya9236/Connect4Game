@@ -15,6 +15,8 @@ public class Connect4Game {
     private final WinStrategy winStrategy;
     private final List<GameObserver> observers = new ArrayList<>();
     private int currentPlayerIndex = 0;
+    private boolean gameOver = false;
+    private Player winner = null;
 
     public Connect4Game(Board board, Player[] players, WinStrategy winStrategy) {
         this.board = board;
@@ -39,39 +41,50 @@ public class Connect4Game {
     public Board getBoard() {
         return board;
     }
+    public boolean isGameOver() {
+        return gameOver;
+    }
+    public Player getWinner() {
+        return winner;
+    }
 
-    public boolean makeMove(int column) {
+
+    public MoveResult makeMove(int column) {
+        if (gameOver) {
+            notifyObservers("The game is already over.");
+            return MoveResult.GAME_OVER;
+        }
+
         Player currentPlayer = getCurrentPlayer();
         boolean success = board.dropPiece(column, currentPlayer.getPiece().getSymbol());
 
         if (!success) {
             notifyObservers("Invalid move. Try again.");
-            return false;
+            return MoveResult.INVALID;
         }
 
         notifyObservers(currentPlayer.getName() + " placed a piece in column " + column);
-        return true;
-    }
 
-    public boolean checkWinner() {
-        boolean winner = winStrategy.checkWin(board, getCurrentPlayer().getPiece().getSymbol());
-
-        if (winner) {
-            notifyObservers(getCurrentPlayer().getName() + " wins!");
+        boolean hasWon = winStrategy.checkWin(board, currentPlayer.getPiece().getSymbol());
+        if (hasWon) {
+            gameOver = true;
+            winner = currentPlayer;
+            notifyObservers(currentPlayer.getName() + " wins!");
+            return MoveResult.WIN;
         }
 
-        return winner;
-    }
-
-    public boolean isDraw() {
-        boolean draw = board.isFull();
-
-        if (draw) {
+        if (board.isFull()) {
+            gameOver = true;
             notifyObservers("The game is a draw.");
+            return MoveResult.DRAW;
         }
 
-        return draw;
+        switchTurn();
+        return MoveResult.SUCCESS;
     }
+
+
+
 
     public void switchTurn() {
         currentPlayerIndex = (currentPlayerIndex + 1) % players.length;

@@ -2,8 +2,9 @@ package connect4.view;
 
 import connect4.board.Board;
 
-public class ConsoleBoardView {
+public class ConsoleBoardView implements BoardView {
 
+    @Override
     public void display(Board board) {
         System.out.println();
 

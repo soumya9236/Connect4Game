@@ -3,6 +3,7 @@ package connect4.factory;
 import connect4.piece.RedPiece;
 import connect4.player.HumanPlayer;
 import connect4.player.Player;
+import connect4.strategy.HumanStrategy;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -14,7 +15,7 @@ public class PlayerFactoryTest {
     void createPlayerReturnsHumanPlayer() {
         PlayerFactory factory = new PlayerFactory();
 
-        Player player = factory.createPlayer("Player 1", new RedPiece());
+        Player player = factory.createPlayer("Player 1", new RedPiece(),new HumanStrategy());
 
         assertInstanceOf(HumanPlayer.class, player);
     }
@@ -23,7 +24,7 @@ public class PlayerFactoryTest {
     void createdPlayerHasCorrectName() {
         PlayerFactory factory = new PlayerFactory();
 
-        Player player = factory.createPlayer("Player 1", new RedPiece());
+        Player player = factory.createPlayer("Player 1", new RedPiece(),new HumanStrategy());
 
         assertEquals("Player 1", player.getName());
     }
@@ -33,7 +34,7 @@ public class PlayerFactoryTest {
         PlayerFactory factory = new PlayerFactory();
         RedPiece redPiece = new RedPiece();
 
-        Player player = factory.createPlayer("Player 1", redPiece);
+        Player player = factory.createPlayer("Player 1", redPiece,new HumanStrategy());
 
         assertEquals(redPiece, player.getPiece());
     }
