@@ -6,6 +6,7 @@ import connect4.factory.PieceFactory;
 import connect4.factory.PlayerFactory;
 import connect4.player.Player;
 import connect4.strategy.*;
+import connect4.builder.Connect4GameBuilder;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -78,7 +79,7 @@ public class GameSetupDialog extends JDialog {
         diffPanel.add(sectionLabel("Difficulty"));
         diffPanel.add(Box.createVerticalStrut(8));
         diffPanel.add(buildDiffPanel());
-        diffPanel.setVisible(false);          // hidden until HvC selected
+        diffPanel.setVisible(false);
         centre.add(diffPanel);
 
         root.add(centre, BorderLayout.CENTER);
@@ -138,45 +139,17 @@ public class GameSetupDialog extends JDialog {
         String mode = getSelected(modeGroup);
         String diff = getSelected(diffGroup);
 
-        PieceFactory   pieceFactory  = new PieceFactory();
-        PlayerFactory  playerFactory = new PlayerFactory();
-        GridBoard      board         = new GridBoard(6, 7);
-
-        Player player1 = playerFactory.createPlayer(
-                "Player 1",
-                pieceFactory.createPiece("red"),
-                new HumanStrategy()
-        );
-
-        Player player2;
-        if ("hvc".equals(mode)) {
-            MoveStrategy aiStrategy = switch (diff) {
-                case "medium" -> new CleverStrategy();
-                case "hard"   -> new MasterStrategy();
-                default       -> new RandomStrategy();   // easy
-            };
-            player2 = playerFactory.createPlayer(
-                    "Computer (" + capitalize(diff) + ")",
-                    pieceFactory.createPiece("blue"),
-                    aiStrategy
-            );
-        } else {
-            player2 = playerFactory.createPlayer(
-                    "Player 2",
-                    pieceFactory.createPiece("blue"),
-                    new HumanStrategy()
-            );
-        }
-
-        result = new Connect4Game(
-                board,
-                new Player[]{player1, player2},
-                new StandardWinStrategy()
-        );
+        result = new Connect4GameBuilder()
+                .withRows(6)
+                .withCols(7)
+                .withMode(mode)
+                .withDifficulty(diff)
+                .withPlayerOneName("Player 1")
+                .withPlayerTwoName("Player 2")
+                .build();
 
         dispose();
     }
-
     // ── helpers ───────────────────────────────────────────────────────────────
 
     private JLabel sectionLabel(String text) {

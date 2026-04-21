@@ -382,10 +382,49 @@ public class SwingConnect4 implements BoardView {
 
     private void showGameOver() {
         disableColumnButtons();
+
+        String messageText;
+        String title;
+
         if (game.getWinner() != null) {
-            message.setText(game.getWinner().getName() + " wins! 🎉");
+            messageText = game.getWinner().getName() + " wins! 🎉";
+            title = "Winner!";
+            message.setText(messageText);
         } else {
-            message.setText("It's a draw!");
+            messageText = "It's a draw!";
+            title = "Draw";
+            message.setText(messageText);
+        }
+
+        String[] options = {"Play Again", "Exit"};
+
+        int choice = JOptionPane.showOptionDialog(
+                frame,
+                messageText,
+                title,
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.INFORMATION_MESSAGE,
+                null,
+                options,
+                options[0]
+        );
+
+        if (choice == 0) {
+            frame.dispose();
+
+            SwingUtilities.invokeLater(() -> {
+                GameSetupDialog setup = new GameSetupDialog(null);
+                Connect4Game newGame = setup.getConfiguredGame();
+
+                if (newGame == null) {
+                    System.exit(0);
+                }
+
+                new SwingConnect4(newGame).show();
+            });
+        } else {
+            frame.dispose();
+            System.exit(0);
         }
     }
 
@@ -399,9 +438,6 @@ public class SwingConnect4 implements BoardView {
         SwingUtilities.invokeLater(() -> frame.setVisible(true));
     }
 
-    // -------------------------------------------------------------------------
-    // Entry point — shows setup dialog first, then launches the game
-    // -------------------------------------------------------------------------
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
