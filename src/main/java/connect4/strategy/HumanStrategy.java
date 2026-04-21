@@ -6,7 +6,16 @@ import connect4.player.Player;
 import java.util.Scanner;
 
 public class HumanStrategy implements MoveStrategy {
-    private final Scanner scanner = new Scanner(System.in);
+
+    private final Scanner scanner;
+
+    public HumanStrategy() {
+        this(new Scanner(System.in));
+    }
+
+    public HumanStrategy(Scanner scanner) {
+        this.scanner = scanner;
+    }
 
     @Override
     public int selectColumn(Board board, Player player) {

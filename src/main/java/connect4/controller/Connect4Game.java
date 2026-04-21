@@ -90,4 +90,5 @@ public class Connect4Game {
         currentPlayerIndex = (currentPlayerIndex + 1) % players.length;
         notifyObservers("It is now " + getCurrentPlayer().getName() + "'s turn.");
     }
+
 }

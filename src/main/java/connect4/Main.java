@@ -8,10 +8,11 @@ import connect4.factory.PlayerFactory;
 import connect4.observer.ConsoleGameObserver;
 import connect4.player.Player;
 import connect4.strategy.HumanStrategy;
-import connect4.strategy.RandomStrategy;
 import connect4.strategy.StandardWinStrategy;
 import connect4.view.BoardView;
 import connect4.view.ConsoleBoardView;
+
+import java.util.Scanner;
 
 public class Main {
 
@@ -21,17 +22,18 @@ public class Main {
         PieceFactory pieceFactory = new PieceFactory();
         PlayerFactory playerFactory = new PlayerFactory();
 
+        Scanner sharedScanner = new Scanner(System.in);
+
         Player player1 = playerFactory.createPlayer(
                 "Player 1",
                 pieceFactory.createPiece("red"),
-                new HumanStrategy()
+                new HumanStrategy(sharedScanner)
         );
 
         Player player2 = playerFactory.createPlayer(
                 "Player 2",
                 pieceFactory.createPiece("blue"),
-                new HumanStrategy()
-                // or new RandomStrategy()
+                new HumanStrategy(sharedScanner)
         );
 
         Connect4Game game =

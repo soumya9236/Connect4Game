@@ -216,22 +216,12 @@
 package connect4.view;
 
 import connect4.board.Board;
-import connect4.board.GridBoard;
 import connect4.controller.Connect4Game;
 import connect4.controller.MoveResult;
-import connect4.factory.PieceFactory;
-import connect4.factory.PlayerFactory;
 import connect4.player.Player;
-import connect4.strategy.CleverStrategy;
 import connect4.strategy.HumanStrategy;
-import connect4.strategy.MasterStrategy;
-import connect4.strategy.MoveStrategy;
-import connect4.strategy.RandomStrategy;
-import connect4.strategy.StandardWinStrategy;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-import javax.swing.border.LineBorder;
 import java.awt.*;
 
 public class SwingConnect4 implements BoardView {
@@ -398,16 +388,7 @@ public class SwingConnect4 implements BoardView {
 
         String[] options = {"Play Again", "Exit"};
 
-        int choice = JOptionPane.showOptionDialog(
-                frame,
-                messageText,
-                title,
-                JOptionPane.YES_NO_OPTION,
-                JOptionPane.INFORMATION_MESSAGE,
-                null,
-                options,
-                options[0]
-        );
+        int choice = showEndGameDialog(messageText, title);
 
         if (choice == 0) {
             frame.dispose();
@@ -417,14 +398,14 @@ public class SwingConnect4 implements BoardView {
                 Connect4Game newGame = setup.getConfiguredGame();
 
                 if (newGame == null) {
-                    System.exit(0);
+                    exitApplication();
                 }
 
                 new SwingConnect4(newGame).show();
             });
         } else {
             frame.dispose();
-            System.exit(0);
+            exitApplication();
         }
     }
 
@@ -444,12 +425,32 @@ public class SwingConnect4 implements BoardView {
             GameSetupDialog setup = new GameSetupDialog(null);
             Connect4Game game = setup.getConfiguredGame();
 
-            if (game == null) {
-                // User closed the dialog without clicking Start
-                System.exit(0);
-            }
+            exitIfNoGame(game);
 
             new SwingConnect4(game).show();
         });
+    }
+    protected int showEndGameDialog(String messageText, String title) {
+        String[] options = {"Play Again", "Exit"};
+
+        return JOptionPane.showOptionDialog(
+                frame,
+                messageText,
+                title,
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.INFORMATION_MESSAGE,
+                null,
+                options,
+                options[0]
+        );
+    }
+
+    protected void exitApplication() {
+        System.exit(0);
+    }
+    static void exitIfNoGame(Connect4Game game) {
+        if (game == null) {
+            System.exit(0);
+        }
     }
 }
