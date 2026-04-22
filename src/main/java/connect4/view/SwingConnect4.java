@@ -248,6 +248,8 @@ public class SwingConnect4 implements BoardView {
 
     private final Deque<GameCommand> commandHistory = new ArrayDeque<>();
     private JButton undoButton;
+    private int redUndosLeft = 3;
+    private int blueUndosLeft = 3;
 
     public SwingConnect4(Connect4Game game) {
         this.game = game;
@@ -489,7 +491,14 @@ public class SwingConnect4 implements BoardView {
             return;
         }
 
-        // re-enable buttons in case undo happens after game over
+        if (getUndosLeftForCurrentPlayer() <= 0) {
+            message.setText(game.getCurrentPlayer().getName() + " has no undos left.");
+            return;
+        }
+
+        useUndoForCurrentPlayer();
+
+
         for (JButton button : columnButtons) {
             button.setEnabled(true);
         }
@@ -497,7 +506,6 @@ public class SwingConnect4 implements BoardView {
         GameCommand lastCommand = commandHistory.pop();
         lastCommand.undo();
 
-        // If it is now AI's turn, undo one more move so the human gets control back.
         if (!commandHistory.isEmpty()
                 && !(game.getCurrentPlayer().getStrategy() instanceof HumanStrategy)) {
             GameCommand previousCommand = commandHistory.pop();
@@ -506,5 +514,18 @@ public class SwingConnect4 implements BoardView {
 
         display(game.getBoard());
         updateMessage();
+    }
+    private int getUndosLeftForCurrentPlayer() {
+        char symbol = game.getCurrentPlayer().getPiece().getSymbol();
+        return (symbol == 'R') ? redUndosLeft : blueUndosLeft;
+    }
+
+    private void useUndoForCurrentPlayer() {
+        char symbol = game.getCurrentPlayer().getPiece().getSymbol();
+        if (symbol == 'R') {
+            redUndosLeft--;
+        } else {
+            blueUndosLeft--;
+        }
     }
 }
