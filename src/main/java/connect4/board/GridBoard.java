@@ -60,4 +60,23 @@ public class GridBoard implements Board{
     public int getCols() {
         return cols;
     }
+
+    public char[][] copyGrid() {
+        char[][] copy = new char[rows][cols];
+        for (int r = 0; r < rows; r++) {
+            for (int c = 0; c < cols; c++) {
+                copy[r][c] = grid[r][c];
+            }
+        }
+        return copy;
+    }
+
+    public void restoreGrid(char[][] savedGrid) {
+        for (int r = 0; r < rows; r++) {
+            for (int c = 0; c < cols; c++) {
+                grid[r][c] = savedGrid[r][c];
+            }
+        }
+    }
+
 }

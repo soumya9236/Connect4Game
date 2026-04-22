@@ -216,6 +216,8 @@
 package connect4.view;
 
 import connect4.board.Board;
+import connect4.command.DropPieceCommand;
+import connect4.command.GameCommand;
 import connect4.controller.Connect4Game;
 import connect4.controller.MoveResult;
 import connect4.player.Player;
@@ -223,6 +225,8 @@ import connect4.strategy.HumanStrategy;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 public class SwingConnect4 implements BoardView {
 
@@ -242,6 +246,9 @@ public class SwingConnect4 implements BoardView {
     private final DiscCell[][] cells;
     private final JButton[] columnButtons;
 
+    private final Deque<GameCommand> commandHistory = new ArrayDeque<>();
+    private JButton undoButton;
+
     public SwingConnect4(Connect4Game game) {
         this.game = game;
 
@@ -258,8 +265,10 @@ public class SwingConnect4 implements BoardView {
         // If player 1 is AI (unlikely but supported), auto-play immediately
         maybePlayAiTurn();
     }
-
     private void buildUi(int rows, int cols) {
+        JPanel topPanel = new JPanel(new BorderLayout());
+        topPanel.setBackground(BACKGROUND_COLOR);
+
         buttonPanel.setLayout(new GridLayout(1, cols, 10, 10));
         buttonPanel.setBackground(BACKGROUND_COLOR);
 
@@ -270,6 +279,16 @@ public class SwingConnect4 implements BoardView {
             columnButtons[c] = button;
             buttonPanel.add(button);
         }
+
+        undoButton = new JButton("Undo");
+        undoButton.addActionListener(e -> handleUndo());
+
+        JPanel undoPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        undoPanel.setBackground(BACKGROUND_COLOR);
+        undoPanel.add(undoButton);
+
+        topPanel.add(buttonPanel, BorderLayout.CENTER);
+        topPanel.add(undoPanel, BorderLayout.EAST);
 
         boardPanel.setLayout(new GridLayout(rows, cols, 6, 6));
         boardPanel.setBorder(BorderFactory.createEmptyBorder(6, 12, 12, 12));
@@ -289,24 +308,29 @@ public class SwingConnect4 implements BoardView {
 
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setLayout(new BorderLayout());
-        frame.add(buttonPanel, BorderLayout.NORTH);
+        frame.add(topPanel, BorderLayout.NORTH);
         frame.add(boardPanel, BorderLayout.CENTER);
         frame.add(bottom, BorderLayout.SOUTH);
         frame.pack();
         frame.setLocationRelativeTo(null);
     }
 
+
     private void handleMove(int column) {
         if (game.isGameOver()) return;
 
-        // Only accept clicks when it's a human's turn
         if (!(game.getCurrentPlayer().getStrategy() instanceof HumanStrategy)) return;
 
-        MoveResult result = game.makeMove(column);
+        GameCommand command = new DropPieceCommand(game, column);
+        MoveResult result = command.execute();
 
         if (result == MoveResult.INVALID) {
             message.setText("Invalid move. Try another column.");
             return;
+        }
+
+        if (result == MoveResult.SUCCESS || result == MoveResult.WIN || result == MoveResult.DRAW) {
+            commandHistory.push(command);
         }
 
         display(game.getBoard());
@@ -320,6 +344,8 @@ public class SwingConnect4 implements BoardView {
         maybePlayAiTurn();
     }
 
+
+
     private void maybePlayAiTurn() {
         if (game.isGameOver()) return;
 
@@ -331,7 +357,12 @@ public class SwingConnect4 implements BoardView {
             if (game.isGameOver()) return;
 
             int column = current.getStrategy().selectColumn(game.getBoard(), current);
-            MoveResult result = game.makeMove(column);
+            GameCommand command = new DropPieceCommand(game, column);
+            MoveResult result = command.execute();
+
+            if (result == MoveResult.SUCCESS || result == MoveResult.WIN || result == MoveResult.DRAW) {
+                commandHistory.push(command);
+            }
 
             if (result != MoveResult.INVALID) {
                 display(game.getBoard());
@@ -340,7 +371,6 @@ public class SwingConnect4 implements BoardView {
                     showGameOver();
                 } else {
                     updateMessage();
-                    // In case two AIs are playing each other, keep going
                     maybePlayAiTurn();
                 }
             }
@@ -452,5 +482,29 @@ public class SwingConnect4 implements BoardView {
         if (game == null) {
             System.exit(0);
         }
+    }
+    private void handleUndo() {
+        if (commandHistory.isEmpty()) {
+            message.setText("Nothing to undo.");
+            return;
+        }
+
+        // re-enable buttons in case undo happens after game over
+        for (JButton button : columnButtons) {
+            button.setEnabled(true);
+        }
+
+        GameCommand lastCommand = commandHistory.pop();
+        lastCommand.undo();
+
+        // If it is now AI's turn, undo one more move so the human gets control back.
+        if (!commandHistory.isEmpty()
+                && !(game.getCurrentPlayer().getStrategy() instanceof HumanStrategy)) {
+            GameCommand previousCommand = commandHistory.pop();
+            previousCommand.undo();
+        }
+
+        display(game.getBoard());
+        updateMessage();
     }
 }

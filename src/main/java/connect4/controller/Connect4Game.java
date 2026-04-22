@@ -4,6 +4,7 @@ import connect4.board.Board;
 import connect4.observer.GameObserver;
 import connect4.player.Player;
 import connect4.strategy.WinStrategy;
+import connect4.board.GridBoard;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -90,5 +91,36 @@ public class Connect4Game {
         currentPlayerIndex = (currentPlayerIndex + 1) % players.length;
         notifyObservers("It is now " + getCurrentPlayer().getName() + "'s turn.");
     }
+    public static class GameState {
+        private final char[][] gridSnapshot;
+        private final int currentPlayerIndex;
+        private final boolean gameOver;
+        private final Player winner;
+
+        public GameState(char[][] gridSnapshot, int currentPlayerIndex, boolean gameOver, Player winner) {
+            this.gridSnapshot = gridSnapshot;
+            this.currentPlayerIndex = currentPlayerIndex;
+            this.gameOver = gameOver;
+            this.winner = winner;
+        }
+    }
+    public GameState saveState() {
+        GridBoard gridBoard = (GridBoard) board;
+        return new GameState(
+                gridBoard.copyGrid(),
+                currentPlayerIndex,
+                gameOver,
+                winner
+        );
+    }
+
+    public void restoreState(GameState state) {
+        GridBoard gridBoard = (GridBoard) board;
+        gridBoard.restoreGrid(state.gridSnapshot);
+        this.currentPlayerIndex = state.currentPlayerIndex;
+        this.gameOver = state.gameOver;
+        this.winner = state.winner;
+    }
+
 
 }
