@@ -13,7 +13,7 @@ import java.util.Random;
  * Tries to win if it can, blocks the opponent if they are about to win,
  * otherwise picks a random column.
  */
-public class CleverStrategy implements MoveStrategy {
+public class MediumStrategy implements MoveStrategy {
 
     private final Random random = new Random();
 

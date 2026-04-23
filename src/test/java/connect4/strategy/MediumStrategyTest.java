@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class CleverStrategyTest {
+public class MediumStrategyTest {
 
     @Test
     void choosesWinningMoveWhenAvailable() {
@@ -20,7 +20,7 @@ public class CleverStrategyTest {
         board.dropPiece(0, 'R');
 
         Player player = new HumanPlayer("AI", new RedPiece(), new HumanStrategy());
-        CleverStrategy strategy = new CleverStrategy();
+        MediumStrategy strategy = new MediumStrategy();
 
         assertEquals(0, strategy.selectColumn(board, player));
     }
@@ -33,7 +33,7 @@ public class CleverStrategyTest {
         board.dropPiece(2, 'B');
 
         Player player = new HumanPlayer("AI", new RedPiece(), new HumanStrategy());
-        CleverStrategy strategy = new CleverStrategy();
+        MediumStrategy strategy = new MediumStrategy();
 
         assertEquals(2, strategy.selectColumn(board, player));
     }
@@ -42,7 +42,7 @@ public class CleverStrategyTest {
     void fallsBackToRandomValidMove() {
         Board board = new GridBoard(6, 7);
         Player player = new HumanPlayer("AI", new BluePiece(), new HumanStrategy());
-        CleverStrategy strategy = new CleverStrategy();
+        MediumStrategy strategy = new MediumStrategy();
 
         int col = strategy.selectColumn(board, player);
 

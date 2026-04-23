@@ -2,10 +2,10 @@ package connect4.builder;
 
 import connect4.controller.Connect4Game;
 import connect4.player.Player;
-import connect4.strategy.CleverStrategy;
+import connect4.strategy.MediumStrategy;
 import connect4.strategy.HumanStrategy;
-import connect4.strategy.MasterStrategy;
-import connect4.strategy.RandomStrategy;
+import connect4.strategy.HardStrategy;
+import connect4.strategy.EasyStrategy;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Method;
@@ -73,7 +73,7 @@ public class Connect4GameBuilderTest {
 
         Player player2 = game.getCurrentPlayer();
         assertEquals("Computer (Easy)", player2.getName());
-        assertTrue(player2.getStrategy() instanceof RandomStrategy);
+        assertTrue(player2.getStrategy() instanceof EasyStrategy);
     }
 
     @Test
@@ -87,7 +87,7 @@ public class Connect4GameBuilderTest {
 
         Player player2 = game.getCurrentPlayer();
         assertEquals("Computer (Medium)", player2.getName());
-        assertTrue(player2.getStrategy() instanceof CleverStrategy);
+        assertTrue(player2.getStrategy() instanceof MediumStrategy);
     }
 
     @Test
@@ -101,7 +101,7 @@ public class Connect4GameBuilderTest {
 
         Player player2 = game.getCurrentPlayer();
         assertEquals("Computer (Hard)", player2.getName());
-        assertTrue(player2.getStrategy() instanceof MasterStrategy);
+        assertTrue(player2.getStrategy() instanceof HardStrategy);
     }
 
     @Test
@@ -115,7 +115,7 @@ public class Connect4GameBuilderTest {
 
         Player player2 = game.getCurrentPlayer();
         assertEquals("Computer (Legendary)", player2.getName());
-        assertTrue(player2.getStrategy() instanceof RandomStrategy);
+        assertTrue(player2.getStrategy() instanceof EasyStrategy);
     }
 
     @Test
@@ -140,7 +140,7 @@ public class Connect4GameBuilderTest {
 
         Player player2 = game.getCurrentPlayer();
         assertEquals("Computer (Medium)", player2.getName());
-        assertTrue(player2.getStrategy() instanceof CleverStrategy);
+        assertTrue(player2.getStrategy() instanceof MediumStrategy);
     }
 
     @Test

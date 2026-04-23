@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class MasterStrategyTest {
+public class HardStrategyTest {
 
     @Test
     void choosesWinningMoveWhenAvailable() {
@@ -19,7 +19,7 @@ public class MasterStrategyTest {
         board.dropPiece(0, 'R');
 
         Player ai = new HumanPlayer("AI", new RedPiece(), new HumanStrategy());
-        MasterStrategy strategy = new MasterStrategy();
+        HardStrategy strategy = new HardStrategy();
 
         int col = strategy.selectColumn(board, ai);
 
@@ -32,7 +32,7 @@ public class MasterStrategyTest {
         board.dropPiece(0, 'R');
 
         Player ai = new HumanPlayer("AI", new RedPiece(), new HumanStrategy());
-        MasterStrategy strategy = new MasterStrategy();
+        HardStrategy strategy = new HardStrategy();
 
         assertEquals(-1, strategy.selectColumn(board, ai));
     }

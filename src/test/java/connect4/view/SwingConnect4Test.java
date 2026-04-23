@@ -6,8 +6,8 @@ import connect4.controller.Connect4Game;
 import connect4.factory.PieceFactory;
 import connect4.factory.PlayerFactory;
 import connect4.player.Player;
+import connect4.strategy.EasyStrategy;
 import connect4.strategy.HumanStrategy;
-import connect4.strategy.RandomStrategy;
 import connect4.strategy.StandardWinStrategy;
 import org.junit.jupiter.api.*;
 
@@ -34,7 +34,7 @@ public class SwingConnect4Test {
         PieceFactory pieceFactory = new PieceFactory();
         PlayerFactory playerFactory = new PlayerFactory();
         Player p1 = playerFactory.createPlayer("Player 1", pieceFactory.createPiece("red"), new HumanStrategy());
-        Player p2 = playerFactory.createPlayer("Computer", pieceFactory.createPiece("blue"), new RandomStrategy());
+        Player p2 = playerFactory.createPlayer("Computer", pieceFactory.createPiece("blue"), new EasyStrategy());
         return new Connect4Game(board, new Player[]{p1, p2}, new StandardWinStrategy());
     }
 
@@ -42,7 +42,7 @@ public class SwingConnect4Test {
         GridBoard board = new GridBoard(6, 7);
         PieceFactory pieceFactory = new PieceFactory();
         PlayerFactory playerFactory = new PlayerFactory();
-        Player p1 = playerFactory.createPlayer("Computer", pieceFactory.createPiece("red"), new RandomStrategy());
+        Player p1 = playerFactory.createPlayer("Computer", pieceFactory.createPiece("red"), new EasyStrategy());
         Player p2 = playerFactory.createPlayer("Player 2", pieceFactory.createPiece("blue"), new HumanStrategy());
         return new Connect4Game(board, new Player[]{p1, p2}, new StandardWinStrategy());
     }

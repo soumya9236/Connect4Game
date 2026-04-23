@@ -5,12 +5,8 @@ import connect4.controller.Connect4Game;
 import connect4.factory.PieceFactory;
 import connect4.factory.PlayerFactory;
 import connect4.player.Player;
-import connect4.strategy.CleverStrategy;
-import connect4.strategy.HumanStrategy;
-import connect4.strategy.MasterStrategy;
-import connect4.strategy.MoveStrategy;
-import connect4.strategy.RandomStrategy;
-import connect4.strategy.StandardWinStrategy;
+import connect4.strategy.*;
+import connect4.strategy.HardStrategy;
 
 public class Connect4GameBuilder {
 
@@ -67,9 +63,9 @@ public class Connect4GameBuilder {
         Player player2;
         if ("hvc".equals(mode)) {
             MoveStrategy aiStrategy = switch (difficulty) {
-                case "medium" -> new CleverStrategy();
-                case "hard" -> new MasterStrategy();
-                default -> new RandomStrategy();
+                case "medium" -> new MediumStrategy();
+                case "hard" -> new HardStrategy();
+                default -> new EasyStrategy();
             };
 
             player2 = playerFactory.createPlayer(

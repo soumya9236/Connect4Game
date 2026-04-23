@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class RandomStrategy implements MoveStrategy {
+public class EasyStrategy implements MoveStrategy {
     private final Random random = new Random();
 
     @Override

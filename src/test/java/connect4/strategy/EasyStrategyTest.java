@@ -9,13 +9,13 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class RandomStrategyTest {
+public class EasyStrategyTest {
 
     @Test
     void returnsValidColumnWhenMovesExist() {
         Board board = new GridBoard(6, 7);
         Player player = new HumanPlayer("P1", new RedPiece(), new HumanStrategy());
-        RandomStrategy strategy = new RandomStrategy();
+        EasyStrategy strategy = new EasyStrategy();
 
         int col = strategy.selectColumn(board, player);
 
@@ -29,7 +29,7 @@ public class RandomStrategyTest {
         board.dropPiece(0, 'R');
 
         Player player = new HumanPlayer("P1", new RedPiece(), new HumanStrategy());
-        RandomStrategy strategy = new RandomStrategy();
+        EasyStrategy strategy = new EasyStrategy();
 
         assertEquals(-1, strategy.selectColumn(board, player));
     }

@@ -7,7 +7,7 @@ import connect4.player.Player;
 /**
  * Hard difficulty computer. Thinks ahead several moves to pick the best play.
  */
-public class MasterStrategy implements MoveStrategy {
+public class HardStrategy implements MoveStrategy {
 
     private static final int MAX_DEPTH  =  5;
     private static final int WIN_SCORE  =  1_000_000;
